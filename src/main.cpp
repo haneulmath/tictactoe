@@ -69,7 +69,7 @@ void play_game(Player& player1, Player& player2) {
 
         // Validation du mouvement
         while (move < 1 || move > 9 || board[move - 1] != '.') {
-            std::cout << "Mouvement invalide. Essayez encore: ";
+            std::cout << "Choix invalide. Essayez encore: ";
             std::cin >> move;
         }
 
