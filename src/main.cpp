@@ -3,7 +3,7 @@
 #include "ai.hpp"
 
 // Fonction pour créer un joueur en demandant son nom et son symbole
-Player create_player() {
+Player create_player(char taken_symbol = '\0') {
     std::string name;
     char symbol;
 
@@ -14,8 +14,12 @@ Player create_player() {
     std::cin >> symbol;
 
     // Validation du symbole
-    while (symbol != 'X' && symbol != 'O') {
-        std::cout << "Symbole invalide. Choisissez X ou O: ";
+    while ((symbol != 'X' && symbol != 'O') || symbol == taken_symbol) {
+        if (symbol == taken_symbol) {
+            std::cout << "Symbole déjà pris. Choisissez en un autre: ";
+        } else {
+            std::cout << "Symbole invalide. Choisissez X ou O: ";
+        }
         std::cin >> symbol;
     }
 
