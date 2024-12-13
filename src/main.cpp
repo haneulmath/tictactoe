@@ -75,7 +75,7 @@ void play_game(Player& player1, Player& player2) {
         draw_game_board(board);
         int move;
         if (current_player->name == "IA") {
-            move = static_cast<AI*>(current_player)->make_move(board);
+            move = static_cast<AI*>(current_player)->make_move(board, player1.symbol);
             std::cout << "IA joue sur la case " << move + 1 << std::endl;
         } else {
             std::cout << current_player->name << ", entrez le numéro de la case où vous voulez jouer: ";

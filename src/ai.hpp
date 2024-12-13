@@ -6,7 +6,7 @@
 class AI : public Player {
 public:
     AI(char playerSymbol);
-    int make_move(const char board[9]);
+    int make_move(const char board[9], char opponentSymbol);
 };
 
-#endif 
+#endif
