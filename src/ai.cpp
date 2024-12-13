@@ -1,79 +1,46 @@
 #include "ai.hpp"
-#include <cstdlib>
-#include <ctime>
+#include "utils.hpp"
+#include <limits>
 
-AI::AI(char playerSymbol) : Player("IA", playerSymbol) {
-    std::srand(std::time(0)); 
+AI::AI(char playerSymbol) : Player("IA", playerSymbol) {}
+
+int minimax(char board[9], char currentSymbol, char aiSymbol, char opponentSymbol, bool isMaximizing) {
+    if (check_winner(board, aiSymbol)) return 10;
+    if (check_winner(board, opponentSymbol)) return -10;
+    if (is_board_full(board)) return 0;
+
+    int bestScore = isMaximizing ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
+
+    for (int i = 0; i < 9; ++i) {
+        if (board[i] == '.') {
+            board[i] = currentSymbol;
+            int score = minimax(board, isMaximizing ? opponentSymbol : aiSymbol, aiSymbol, opponentSymbol, !isMaximizing);
+            board[i] = '.';
+            bestScore = isMaximizing ? std::max(score, bestScore) : std::min(score, bestScore);
+        }
+    }
+    return bestScore;
 }
 
-// Fonction qui vérifie si l'ordinateur peut bloquer l'adversaire
-bool can_block(const char board[9], char symbol, int& move) {
-    for (int i = 0; i < 3; ++i) {
-        // Vérification des lignes
-        if (board[i * 3] == symbol && board[i * 3 + 1] == symbol && board[i * 3 + 2] == '.') {
-            move = i * 3 + 2;
-            return true;
-        }
-        if (board[i * 3] == symbol && board[i * 3 + 2] == symbol && board[i * 3 + 1] == '.') {
-            move = i * 3 + 1;
-            return true;
-        }
-        if (board[i * 3 + 1] == symbol && board[i * 3 + 2] == symbol && board[i * 3] == '.') {
-            move = i * 3;
-            return true;
-        }
-        // Vérification des colonnes
-        if (board[i] == symbol && board[i + 3] == symbol && board[i + 6] == '.') {
-            move = i + 6;
-            return true;
-        }
-        if (board[i] == symbol && board[i + 6] == symbol && board[i + 3] == '.') {
-            move = i + 3;
-            return true;
-        }
-        if (board[i + 3] == symbol && board[i + 6] == symbol && board[i] == '.') {
-            move = i;
-            return true;
-        }
-    }
-    // Vérification des diagonales
-    if (board[0] == symbol && board[4] == symbol && board[8] == '.') {
-        move = 8;
-        return true;
-    }
-    if (board[0] == symbol && board[8] == symbol && board[4] == '.') {
-        move = 4;
-        return true;
-    }
-    if (board[4] == symbol && board[8] == symbol && board[0] == '.') {
-        move = 0;
-        return true;
-    }
-    if (board[2] == symbol && board[4] == symbol && board[6] == '.') {
-        move = 6;
-        return true;
-    }
-    if (board[2] == symbol && board[6] == symbol && board[4] == '.') {
-        move = 4;
-        return true;
-    }
-    if (board[4] == symbol && board[6] == symbol && board[2] == '.') {
-        move = 2;
-        return true;
-    }
-    return false;
-}
-
-// Fonction qui détermine le coup de l'ordinateur
 int AI::make_move(const char board[9], char opponentSymbol) {
-    int move;
-    // Si l'ordinateur peut bloquer l'adversaire, il le fait
-    if (can_block(board, opponentSymbol, move)) {
-        return move;
+    int bestMove = -1;
+    int bestScore = std::numeric_limits<int>::min();
+    char tempBoard[9];
+
+    for (int i = 0; i < 9; ++i) {
+        tempBoard[i] = board[i];
     }
-    // Sinon, il choisit un coup aléatoire
-    do {
-        move = std::rand() % 9;
-    } while (board[move] != '.');
-    return move;
+
+    for (int i = 0; i < 9; ++i) {
+        if (tempBoard[i] == '.') {
+            tempBoard[i] = symbol;
+            int moveScore = minimax(tempBoard, opponentSymbol, symbol, opponentSymbol, false);
+            tempBoard[i] = '.';
+            if (moveScore > bestScore) {
+                bestScore = moveScore;
+                bestMove = i;
+            }
+        }
+    }
+    return bestMove;
 }

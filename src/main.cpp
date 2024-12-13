@@ -1,6 +1,7 @@
 #include <iostream>
 #include "player.hpp"
 #include "ai.hpp"
+#include "utils.hpp"
 
 // Fonction pour créer un joueur en demandant son nom et son symbole
 Player create_player(char taken_symbol = '\0') {
@@ -38,32 +39,6 @@ void draw_game_board(const char board[9]) {
             std::cout << "|\n"; // Nouvelle ligne après chaque rangée de 3 cases
         }
     }
-}
-
-// Vérifie si un joueur a gagné
-bool check_winner(const char board[9], char symbol) {
-    // Vérifie les lignes, colonnes et diagonales
-    for (int i = 0; i < 3; ++i) {
-        if ((board[i * 3] == symbol && board[i * 3 + 1] == symbol && board[i * 3 + 2] == symbol) || // Lignes
-            (board[i] == symbol && board[i + 3] == symbol && board[i + 6] == symbol)) { // Colonnes
-            return true;
-        }
-    }
-    if ((board[0] == symbol && board[4] == symbol && board[8] == symbol) || // Diagonale principale
-        (board[2] == symbol && board[4] == symbol && board[6] == symbol)) { // Diagonale secondaire
-        return true;
-    }
-    return false;
-}
-
-// Vérifie si le plateau est plein
-bool is_board_full(const char board[9]) {
-    for (int i = 0; i < 9; ++i) {
-        if (board[i] == '.') {
-            return false;
-        }
-    }
-    return true;
 }
 
 // Fonction principale pour jouer le jeu
@@ -109,32 +84,45 @@ void play_game(Player& player1, Player& player2) {
     }
 }
 
-int main() {
-    int choice;
-    std::cout << "Choisissez le mode de jeu:\n";
-    std::cout << "1. Joueur vs Joueur\n";
-    std::cout << "2. Joueur vs IA\n";
+bool play_again() {
+    char choice;
+    std::cout << "Voulez-vous rejouer ? (y/n): ";
     std::cin >> choice;
+    return choice == 'y' || choice == 'Y';
+}
 
-    if (choice == 1) {
-        Player player1 = create_player();
-        std::cout << "Joueur 1: " << player1.name << " avec le symbole " << player1.symbol << std::endl;
+int main() {
+    while (true) {
+        int choice;
+        std::cout << "Choisissez le mode de jeu:\n";
+        std::cout << "1. Joueur vs Joueur\n";
+        std::cout << "2. Joueur vs IA\n";
+        std::cin >> choice;
 
-        Player player2 = create_player();
-        std::cout << "Joueur 2: " << player2.name << " avec le symbole " << player2.symbol << std::endl;
+        if (choice == 1) {
+            Player player1 = create_player();
+            std::cout << "Joueur 1: " << player1.name << " avec le symbole " << player1.symbol << std::endl;
 
-        play_game(player1, player2); // Lancer le jeu en mode Joueur contre Joueur
-    } else if (choice == 2) {
-        Player player1 = create_player();
-        std::cout << "Joueur: " << player1.name << " avec le symbole " << player1.symbol << std::endl;
+            Player player2 = create_player(player1.symbol);
+            std::cout << "Joueur 2: " << player2.name << " avec le symbole " << player2.symbol << std::endl;
 
-        char ai_symbol = (player1.symbol == 'X') ? 'O' : 'X';
-        AI ai_player(ai_symbol);
-        std::cout << "IA: " << ai_player.name << " avec le symbole " << ai_player.symbol << std::endl;
+            play_game(player1, player2); // Lancer le jeu en mode Joueur contre Joueur
+        } else if (choice == 2) {
+            Player player1 = create_player();
+            std::cout << "Joueur: " << player1.name << " avec le symbole " << player1.symbol << std::endl;
 
-        play_game(player1, ai_player); // Lancer le jeu en mode Joueur contre IA
-    } else {
-        std::cout << "Choix invalide." << std::endl;
+            char ai_symbol = (player1.symbol == 'X') ? 'O' : 'X';
+            AI ai_player(ai_symbol);
+            std::cout << "IA: " << ai_player.name << " avec le symbole " << ai_player.symbol << std::endl;
+
+            play_game(player1, ai_player); // Lancer le jeu en mode Joueur contre IA
+        } else {
+            std::cout << "Choix invalide." << std::endl;
+        }
+
+        if (!play_again()) {
+            break;
+        }
     }
 
     return 0;
