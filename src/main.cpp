@@ -84,6 +84,7 @@ void play_game(Player& player1, Player& player2) {
     }
 }
 
+// Fonction pour rejouer
 bool play_again() {
     char choice;
     std::cout << "Voulez-vous rejouer ? (y/n): ";
