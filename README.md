@@ -2,7 +2,8 @@
 
 ## Éxécution du programme 
 - Lancer TicTacToe
-- Testé sur MacOS
+- Testé sur macOS Sequoia 15.2
+- Utilisation de Clang 15.0.0 arm64-apple-darwin23.6.0
 
 ## Organisation du code
 Le projet est organisé en plusieurs fichiers pour une meilleure modularité et lisibilité :
@@ -27,7 +28,7 @@ Le projet est organisé en plusieurs fichiers pour une meilleure modularité et 
 - **Niveaux de difficulté** : Implémenter différents niveaux de difficulté pour l'IA.
 - **Statistiques** : Enregistrer et afficher les statistiques des joueurs (nombre de victoires, défaites, etc.).
 
-## Bilan
+## Problèmes
 1. **Choix du joueur qui commence** :
    - Initialement, le joueur qui commence était toujours le même.
    - Utilisation de la fonction `rand()` pour choisir aléatoirement le joueur qui commence.
